@@ -1,54 +1,31 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+# Root level temporary files
+/package.json
+/package-lock.json
+/node_modules/
 
-# Virtual Environment
-venv/
-ENV/
-env/
-
-# IDE & Editors
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Database & Storage
+# Node dependencies
+frontend/node_modules/
+backend/venv/
+backend/__pycache__/
+*.pyc
 *.db
 *.sqlite
 *.sqlite3
-ord_cache/
 verification_dump.txt
+*.timestamp-*.mjs
 
-# Testing & Coverage
-.pytest_cache/
-.coverage
-htmlcov/
+# Build outputs
+dist/
+frontend/dist/
+build/
 
-# Environment Variables
+# Environment files
 .env
-!.env.example
+.env.local
+.env.*.local
 
-# OS specific
+# IDE & System
+.vscode/
+.idea/
 .DS_Store
-Thumbs.db
+*.log
