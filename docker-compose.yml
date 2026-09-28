@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: resona-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: resona_user
+      POSTGRES_PASSWORD: resona_password
+      POSTGRES_DB: resona_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U resona_user -d resona_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: resona-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: resona-backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=production
+      - DATABASE_URL=postgresql://resona_user:resona_password@postgres:5432/resona_db
+      - REDIS_URL=redis://redis:6379/0
+      - HINDSIGHT_API_KEY=${HINDSIGHT_API_KEY}
+      - HINDSIGHT_BASE_URL=${HINDSIGHT_BASE_URL:-https://api.hindsight.ai/v1}
+      - HINDSIGHT_BANK_ID=${HINDSIGHT_BANK_ID:-resona_materials_memory}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
